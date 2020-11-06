@@ -1,0 +1,7 @@
+{% macro drop_column(column_name, var_name='data', axis=1) -%}
+    {{ var_name }} = {{ var_name }}.drop(["{{ column_name }}"], axis={{ axis }})
+{%- endmacro %}
+
+{% macro encrypt_column(column_name, var_name='data') -%}
+    {{ var_name }}.{{ column_name }} = data["{{ column_name }}"].apply(hash)
+{%- endmacro %}
