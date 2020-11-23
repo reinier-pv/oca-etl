@@ -1,20 +1,17 @@
 import pandas as pd
 {% import 'transformation_macros.j2' as macros %}
 
-path_to_table = "{{ path_to_table }}"
-headers = {
-    "{{ table_name }}": [{{ table_headers }}],
-}
+table_file_path = "{{ table_file_path }}"
+headers = {{ table_headers }}
 
 try:
-    if "{{ table_name }}" in path_to_table.lower():
-        data = pd.read_csv(path_to_table, sep=";", names=headers["{{ table_name }}"], usecols=headers["{{ table_name }}"],
-                           encoding="latin1", dtype=str, skiprows=1)
-        {{ macros.drop_column("NOMBRE") }}
-        {{ macros.encrypt_column("DOCUMENTO") }}
-        data.to_csv(path_to_table, index=False, sep=";")
-    else:
-        print("no table defined with that name")
-
+    data = pd.read_csv(table_file_path, sep=";", names=headers, usecols=headers, encoding="latin1", dtype=str,
+                       skiprows=1)
+    {% for column, column_transforms in transforms.items() -%}
+    {% for col_transform in column_transforms -%}
+        {{ macros[col_transform](column) }}
+    {% endfor -%}
+    {% endfor -%}
+    data.to_csv(table_file_path, index=False, sep=";")
 except:
     print("ERROR EN EL ENMASCARADO")
