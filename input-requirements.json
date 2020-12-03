@@ -1,5 +1,5 @@
 {
-  "table_file_path": "VALES_20200929.TXT",
+  "table_name": "vales",
   "headers": ["VALE", "T.PRAM", "PROMO", "MONEDA", "CAPITAL", "IMP.CTA", "CANT.CTAS.", "TDOC", "DOCUMENTO",
     "NOMBRE", "FECHA", "HORA", "SUCURSAL", "GARANTIA", " W/C/A ", "SUCURSAL1", "BOLSA", "COD_RES"],
   "transforms": {

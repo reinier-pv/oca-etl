@@ -1,17 +1,21 @@
 import pandas as pd
-{% import 'transformation_macros.j2' as macros %}
+import os
+import sys
+{%- import 'transformation_macros.j2' as macros %}
 
-table_file_path = "{{ table_file_path }}"
+path_to_tables = sys.argv[1]
 headers = {{ table_headers }}
-
-try:
-    data = pd.read_csv(table_file_path, sep=";", names=headers, usecols=headers, encoding="latin1", dtype=str,
-                       skiprows=1)
-    {% for column, column_transforms in transforms.items() -%}
-    {% for col_transform in column_transforms -%}
-        {{ macros[col_transform](column) }}
-    {% endfor -%}
-    {% endfor -%}
-    data.to_csv(table_file_path, index=False, sep=";")
-except:
-    print("ERROR EN EL ENMASCARADO")
+for r, d, f in os.walk(path_to_tables):
+    for file in f:
+        try:
+            table_file_path = os.path.join(r, file)
+            data = pd.read_csv(table_file_path, sep=";", names=headers, usecols=headers, encoding="latin1", dtype=str,
+                               skiprows=1)
+            {% for column, column_transforms in transforms.items() -%}
+            {% for col_transform in column_transforms -%}
+                {{ macros[col_transform](column) }}
+            {% endfor -%}
+            {% endfor -%}
+            data.to_csv(table_file_path, index=False, sep=";")
+        except:
+            print("ERROR EN EL ENMASCARADO")
